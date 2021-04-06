@@ -177,7 +177,6 @@ class Config2D(BaseConfig):
             self.unet_dropout          = 0.0
             self.unet_prefix           = ''
             self.net_conv_after_unet   = 128
-
         elif self.backbone =='resnet':
             self.resnet_n_blocks         = 4
             self.resnet_kernel_size      = 3,3
