@@ -292,7 +292,11 @@ class StarDistBase(BaseModel):
 
 
 
-    def prepare_for_training(self, optimizer=None):
+    def prepare_for_training(CyclicLR):
+        def __init__(self,optimizer=None):
+            super().init__()
+            super(CyclicLR).__init()
+            
         """Prepare for neural network training.
 
         Compiles the model and creates
