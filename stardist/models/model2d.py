@@ -25,6 +25,8 @@ from ..nms import non_maximum_suppression
 
 
 
+
+
 class StarDistData2D(StarDistDataBase):
 
     def __init__(self, X, Y, batch_size, n_rays, length, patch_size=(256,256), b=32, grid=(1,1), shape_completion=False, augmenter=None, foreground_prob=0, **kwargs):
@@ -177,6 +179,8 @@ class Config2D(BaseConfig):
             self.unet_dropout          = 0.0
             self.unet_prefix           = ''
             self.net_conv_after_unet   = 128
+
+            
         elif self.backbone =='resnet':#New version
             self.resnet_n_blocks         = 4
             self.resnet_kernel_size      = 3,3
