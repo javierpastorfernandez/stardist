@@ -70,10 +70,7 @@ def kld(y_true, y_pred):
     return K.mean(K.binary_crossentropy(y_true, y_pred) - K.binary_crossentropy(y_true, y_true), axis=-1)
 
 
-class StarDistBase(BaseModel):
-
-    def __init__(self, config, name=None, basedir='.'):
-        super().__init__(config=config, name=name, basedir=basedir)
+from keras.callbacks import Callback
 
 
 class CyclicLR(BaseModel,Callback):
