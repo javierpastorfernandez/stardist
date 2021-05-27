@@ -352,7 +352,8 @@ class StarDistBase(BaseModel):
 
 
         if self.self.config.cycliclr is not None:
-            self.callbacks.insert(0,self.config.cycliclr(**rlrop_params))
+            clr = CyclicLR(base_lr=0.001, max_lr=0.006,step_size=400., mode='triangular')
+            self.callbacks.insert(0,clr(**rlrop_params))
 
 
 
