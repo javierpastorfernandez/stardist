@@ -253,10 +253,12 @@ class StarDistDataBase(RollingSequence):
 
 
 
-class StarDistBase(BaseModel):
+class StarDistBase(BaseModel,CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
-        super().__init__(config=config, name=name, basedir=basedir)
+        super(BaseModel).__init__(config=config, name=name, basedir=basedir)
+        super(CyclicLR).__init()
+
         threshs = dict(prob=None, nms=None)
         if basedir is not None:
             try:
@@ -292,11 +294,8 @@ class StarDistBase(BaseModel):
 
 
 
-    def prepare_for_training(CyclicLR):
-        def __init__(self,optimizer=None):
-            super().init__()
-            super(CyclicLR).__init()
-            
+    def prepare_for_training(self,optimizer=None):
+
         """Prepare for neural network training.
 
         Compiles the model and creates
