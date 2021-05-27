@@ -252,12 +252,13 @@ class StarDistDataBase(RollingSequence):
             return tuple(x[...,i] for i in range(self.n_channel))
 
 
+#class StarDistBase(BaseModel,CyclicLR):
 
-class StarDistBase(BaseModel,CyclicLR):
+class StarDistBase(CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
-        super(BaseModel).__init__(config=config, name=name, basedir=basedir)
-        super(CyclicLR).__init()
+        #super(BaseModel).__init__(config=config, name=name, basedir=basedir)
+        super(CyclicLR).__init(config=config, name=name, basedir=basedir)
 
         threshs = dict(prob=None, nms=None)
         if basedir is not None:
