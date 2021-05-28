@@ -295,8 +295,8 @@ class StarDistDataBase(RollingSequence):
 class StarDistBase(BaseModel,CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
-
-        super(BaseModel).__init__(config=config, name=name, basedir=basedir)
+        super().__init__(config=config, name=name, basedir=basedir)
+        #super(BaseModel).__init__(config=config, name=name, basedir=basedir)
         super(CyclicLR).__init__()
 
         threshs = dict(prob=None, nms=None)
