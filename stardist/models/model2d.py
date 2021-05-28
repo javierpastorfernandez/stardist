@@ -212,6 +212,9 @@ class Config2D(BaseConfig):
         min_delta_key = 'epsilon' if LooseVersion(keras.__version__)<=LooseVersion('2.1.5') else 'min_delta'
         self.train_reduce_lr           = {'factor': 0.5, 'patience': 40, min_delta_key: 0}
 
+        self.use_gpu                   = False
+
+        """
         #no me dejaba meter nuevos atributos
         self.base_lr=0.001,
         self.max_lr=0.006,
@@ -219,8 +222,7 @@ class Config2D(BaseConfig):
         self.mode='triangular',
         self.gamma=1.,
         self.scale_mode='cycle',
-
-        self.use_gpu                   = False
+        """
 
         # remove derived attributes that shouldn't be overwritten
         for k in ('n_dim', 'n_channel_out'):
