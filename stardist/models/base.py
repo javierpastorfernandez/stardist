@@ -192,19 +192,15 @@ class StarDistBase(BaseModel):
 
     def prepare_for_training(self, optimizer=None):
         """Prepare for neural network training.
-
         Compiles the model and creates
         `Keras Callbacks <https://keras.io/callbacks/>`_ to be used for training.
-
         Note that this method will be implicitly called once by :func:`train`
         (with default arguments) if not done so explicitly beforehand.
-
         Parameters
         ----------
         optimizer : obj or None
             Instance of a `Keras Optimizer <https://keras.io/optimizers/>`_ to be used for training.
             If ``None`` (default), uses ``Adam`` with the learning rate specified in ``config``.
-
         """
         if optimizer is None:
             optimizer = Adam(lr=self.config.train_learning_rate)
@@ -253,7 +249,6 @@ class StarDistBase(BaseModel):
 
     def predict(self, img, axes=None, normalizer=None, n_tiles=None, show_tile_progress=True, **predict_kwargs):
         """Predict.
-
         Parameters
         ----------
         img : :class:`numpy.ndarray`
@@ -274,12 +269,10 @@ class StarDistBase(BaseModel):
             Whether to show progress during tiled prediction.
         predict_kwargs: dict
             Keyword arguments for ``predict`` function of Keras model.
-
         Returns
         -------
         (:class:`numpy.ndarray`,:class:`numpy.ndarray`)
             Returns the tuple (`prob`, `dist`) of per-pixel object probabilities and star-convex polygon/polyhedra distances.
-
         """
         if n_tiles is None:
             n_tiles = [1]*img.ndim
@@ -370,7 +363,6 @@ class StarDistBase(BaseModel):
                           verbose = False,
                           predict_kwargs=None, nms_kwargs=None, overlap_label=None):
         """Predict instance segmentation from input image.
-
         Parameters
         ----------
         img : :class:`numpy.ndarray`
@@ -401,13 +393,11 @@ class StarDistBase(BaseModel):
             Keyword arguments for non-maximum suppression.
         overlap_label: scalar or None
             if not None, label the regions where polygons overlap with that value
-
         Returns
         -------
         (:class:`numpy.ndarray`, dict)
             Returns a tuple of the label instances image and also
             a dictionary with the details (coordinates, etc.) of all remaining polygons/polyhedra.
-
         """
         if predict_kwargs is None:
             predict_kwargs = {}
@@ -428,22 +418,18 @@ class StarDistBase(BaseModel):
     def predict_instances_big(self, img, axes, block_size, min_overlap, context=None,
                               labels_out=None, labels_out_dtype=np.int32, show_progress=True, **kwargs):
         """Predict instance segmentation from very large input images.
-
         Intended to be used when `predict_instances` cannot be used due to memory limitations.
         This function will break the input image into blocks and process them individually
         via `predict_instances` and assemble all the partial results. If used as intended, the result
         should be the same as if `predict_instances` was used directly on the whole image.
-
         **Important**: The crucial assumption is that all predicted object instances are smaller than
                        the provided `min_overlap`. Also, it must hold that: min_overlap + 2*context < block_size.
-
         Example
         -------
         >>> img.shape
         (20000, 20000)
         >>> labels, polys = model.predict_instances_big(img, axes='YX', block_size=4096,
                                                         min_overlap=128, context=128, n_tiles=(4,4))
-
         Parameters
         ----------
         img: :class:`numpy.ndarray` or similar
@@ -470,12 +456,10 @@ class StarDistBase(BaseModel):
             Show progress bar for block processing.
         kwargs: dict
             Keyword arguments for ``predict_instances``.
-
         Returns
         -------
         (:class:`numpy.ndarray` or False, dict)
             Returns the label image and a dictionary with the details (coordinates, etc.) of the polygons/polyhedra.
-
         """
         from ..big import _grid_divisible, BlockND, OBJECT_KEYS#, repaint_labels
         from ..matching import relabel_sequential
@@ -570,15 +554,11 @@ class StarDistBase(BaseModel):
 
     def optimize_thresholds(self, X_val, Y_val, nms_threshs=[0.3,0.4,0.5], iou_threshs=[0.3,0.5,0.7], predict_kwargs=None, optimize_kwargs=None, save_to_json=True):
         """Optimize two thresholds (probability, NMS overlap) necessary for predicting object instances.
-
         Note that the default thresholds yield good results in many cases, but optimizing
         the thresholds for a particular dataset can further improve performance.
-
         The optimized thresholds are automatically used for all further predictions
         and also written to the model directory.
-
         See ``utils.optimize_threshold`` for details and possible choices for ``optimize_kwargs``.
-
         Parameters
         ----------
         X_val : list of ndarray
@@ -596,7 +576,6 @@ class StarDistBase(BaseModel):
             (If not provided, will guess value for `n_tiles` to prevent out of memory errors.)
         optimize_kwargs: dict
             Keyword arguments for ``utils.optimize_threshold`` function.
-
         """
         if predict_kwargs is None:
             predict_kwargs = {}
@@ -688,7 +667,6 @@ class StarDistBase(BaseModel):
 
     def export_TF(self, fname=None, single_output=True, upsample_grid=True):
         """Export model to TensorFlow's SavedModel format that can be used e.g. in the Fiji plugin
-
         Parameters
         ----------
         fname : str

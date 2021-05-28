@@ -85,7 +85,6 @@ class StarDistData2D(StarDistDataBase):
 
 class Config2D(BaseConfig):
     """Configuration for a :class:`StarDist2D` model.
-
     Parameters
     ----------
     axes : str or None
@@ -102,8 +101,6 @@ class Config2D(BaseConfig):
         Name of the neural network architecture to be used as backbone.
     kwargs : dict
         Overwrite (or add) configuration attributes (see below).
-
-
     Attributes
     ----------
     unet_n_depth : int
@@ -150,7 +147,6 @@ class Config2D(BaseConfig):
         Parameter :class:`dict` of ReduceLROnPlateau_ callback; set to ``None`` to disable.
     use_gpu : bool
         Indicate that the data generator should use OpenCL to do computations on the GPU.
-
         .. _ReduceLROnPlateau: https://keras.io/callbacks/#reducelronplateau
     """
 
@@ -229,7 +225,6 @@ class Config2D(BaseConfig):
 
 class StarDist2D(StarDistBase):
     """StarDist2D model.
-
     Parameters
     ----------
     config : :class:`Config` or None
@@ -239,14 +234,12 @@ class StarDist2D(StarDistBase):
         Model name. Uses a timestamp if set to ``None`` (default).
     basedir : str
         Directory that contains (or will contain) a folder with the given model name.
-
     Raises
     ------
     FileNotFoundError
         If ``config=None`` and config cannot be loaded from disk.
     ValueError
         Illegal arguments, including invalid configuration.
-
     Attributes
     ----------
     config : :class:`Config`
@@ -337,7 +330,6 @@ class StarDist2D(StarDistBase):
 
     def train(self, X, Y, validation_data, augmenter=None, seed=None, epochs=None, steps_per_epoch=None):
         """Train the neural network with the given data.
-
         Parameters
         ----------
         X : tuple, list, `numpy.ndarray`, `keras.utils.Sequence`
@@ -361,12 +353,10 @@ class StarDist2D(StarDistBase):
             Optional argument to use instead of the value from ``config``.
         steps_per_epoch : int
             Optional argument to use instead of the value from ``config``.
-
         Returns
         -------
         ``History`` object
             See `Keras training history <https://keras.io/models/model/#fit>`_.
-
         """
         if seed is not None:
             # https://keras.io/getting-started/faq/#how-can-i-obtain-reproducible-results-using-keras-during-development
