@@ -26,6 +26,11 @@ from ..sample_patches import get_valid_inds
 from ..utils import _is_power_of_2,  _is_floatarray, optimize_threshold
 
 
+from keras.callbacks import Callback
+
+
+
+
 # TODO: support (optional) classification of objects?
 # TODO: helper function to check if receptive field of cnn is sufficient for object sizes in GT
 
@@ -153,6 +158,86 @@ class StarDistDataBase(RollingSequence):
 
 
 
+
+class CyclicLR(BaseModel):
+
+    def __init__(
+            scale_fn=None):
+
+        super().__init__(scale_fn=None)
+        
+        if scale_fn is None:
+            if self.config.cyliclr.mode == 'triangular':
+                self.config.cyliclr.scale_fn = lambda x: 1.
+                self.config.cyliclr.scale_mode = 'cycle'
+
+            elif self.config.cyliclr..mode == 'triangular2':
+                self.config.cyliclr.scale_fn = lambda x: 1 / (2.**(x - 1))
+                self.config.cyliclr.scale_mode = 'cycle'
+            elif self.config.cyliclr.mode == 'exp_range':
+                self.config.cyliclr.scale_fn = lambda x: gamma ** x
+                self.config.cyliclr.scale_mode = 'iterations'
+        else:
+            self.config.cyliclr.scale_fn = scale_fn
+            self.config.cyliclr.scale_mode = scale_mode
+        self.config.cyliclr.clr_iterations = 0.
+        self.config.cyliclr.trn_iterations = 0.
+        self.config.cyliclr.history = {}
+        self._reset()
+
+
+    def _reset(self, new_base_lr=None, new_max_lr=None,
+               new_step_size=None):
+        if new_base_lr is not None:
+            self.config.cyliclr.base_lr = new_base_lr
+        if new_max_lr is not None:
+            self.config.cyliclr.max_lr = new_max_lr
+        if new_step_size is not None:
+            self.config.cyliclr.step_size = new_step_size
+        self.config.cyliclr.clr_iterations = 0.
+        
+    def clr(self):
+        cycle = np.floor(1 + self.config.cyliclr.clr_iterations / (2 * self.config.cyliclr.step_size))
+        x = np.abs(self.config.cyliclr.clr_iterations / self.config.cyliclr.step_size - 2 * cycle + 1)
+        if self.config.cyliclr.scale_mode == 'cycle':
+            return self.config.cyliclr.base_lr + (self.config.cyliclr.max_lr - self.config.cyliclr.base_lr) * \
+                np.maximum(0, (1 - x)) * self.config.cyliclr.scale_fn(cycle)
+        else:
+            return self.config.cyliclr.base_lr + (self.config.cyliclr.max_lr - self.config.cyliclr.base_lr) * \
+                np.maximum(0, (1 - x)) * self.config.cyliclr.scale_fn(self.config.cyliclr.clr_iterations)
+
+
+    def on_train_begin(self, logs={}):
+        logs = logs or {}
+
+        if self.config.cyliclr.clr_iterations == 0:
+            K.set_value(self.model.optimizer.lr, self.config.cyliclr.base_lr)
+        else:
+            K.set_value(self.model.optimizer.lr, self.clr())
+
+    def on_batch_end(self, epoch, logs=None):
+
+        logs = logs or {}
+        self.trn_iterations += 1
+        self.clr_iterations += 1
+        K.set_value(self.model.optimizer.lr, self.clr())
+
+        self.history.setdefault(
+            'lr', []).append(
+            K.get_value(
+                self.model.optimizer.lr))
+        self.history.setdefault('iterations', []).append(self.trn_iterations)
+
+        for k, v in logs.items():
+            self.history.setdefault(k, []).append(v)
+
+    def on_epoch_end(self, epoch, logs=None):
+        logs = logs or {}
+        logs['lr'] = K.get_value(self.model.optimizer.lr)
+
+
+
+
 class StarDistBase(BaseModel):
 
     def __init__(self, config, name=None, basedir='.'):
@@ -190,7 +275,22 @@ class StarDistBase(BaseModel):
         self._thresholds = namedtuple('Thresholds',d.keys())(*d.values())
 
 
+
+
+
+
     def prepare_for_training(self, optimizer=None):
+        # cyclic training
+
+
+
+
+
+
+
+
+
+
         """Prepare for neural network training.
         Compiles the model and creates
         `Keras Callbacks <https://keras.io/callbacks/>`_ to be used for training.
@@ -243,6 +343,10 @@ class StarDistBase(BaseModel):
                 rlrop_params['verbose'] = True
             # TF2: add as first callback to put 'lr' in the logs for TensorBoard
             self.callbacks.insert(0,ReduceLROnPlateau(**rlrop_params))
+        else:
+            clr = CyclicLR(self.config.cyliclr, self.config.max_lr,self.config.step_size, self.config.mode)
+            self.callbacks.insert(0,clr)
+
 
         self._model_prepared = True
 

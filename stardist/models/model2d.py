@@ -212,6 +212,13 @@ class Config2D(BaseConfig):
         min_delta_key = 'epsilon' if LooseVersion(keras.__version__)<=LooseVersion('2.1.5') else 'min_delta'
         self.train_reduce_lr           = {'factor': 0.5, 'patience': 40, min_delta_key: 0}
 
+        self.cyliclr.base_lr=0.001,
+        self.cyliclr.max_lr=0.006,
+        self.cyliclr.step_size=2000.,
+        self.cyliclr.mode='triangular',
+        self.cyliclr.gamma=1.,
+        self.cyliclr.scale_mode='cycle',
+        
         self.use_gpu                   = False
 
         # remove derived attributes that shouldn't be overwritten
