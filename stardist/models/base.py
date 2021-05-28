@@ -171,7 +171,7 @@ class CyclicLR(BaseModel):
                 self.config.cyliclr.scale_fn = lambda x: 1.
                 self.config.cyliclr.scale_mode = 'cycle'
 
-            elif self.config.cyliclr..mode == 'triangular2':
+            elif self.config.cyliclr.mode == 'triangular2':
                 self.config.cyliclr.scale_fn = lambda x: 1 / (2.**(x - 1))
                 self.config.cyliclr.scale_mode = 'cycle'
             elif self.config.cyliclr.mode == 'exp_range':
