@@ -238,7 +238,7 @@ class CyclicLR(BaseModel):
 
 
 
-class StarDistBase(CyclicLR):
+class StarDistBase(BaseModel):
 
     def __init__(self, config, name=None, basedir='.'):
         super().__init__(config=config, name=name, basedir=basedir)
