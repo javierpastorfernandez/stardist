@@ -297,9 +297,8 @@ class StarDistBase(BaseModel,CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
 
-        super(BaseModel).__init__(config=config, name=name, basedir=basedir)
-        super(CyclicLR).__init__(base_lr=0.001, max_lr=0.006, step_size=2000., mode='triangular',
-                 gamma=1., scale_fn=None, scale_mode='cycle')
+        super(BaseModel).__init__()
+        super(CyclicLR).__init__()
 
         threshs = dict(prob=None, nms=None)
         if basedir is not None:
