@@ -6,7 +6,7 @@ import math
 from tqdm import tqdm
 
 from csbdeep.models import BaseConfig
-from csbdeep.internals.blocks import unet_block
+from csbdeep.internals.blocks import unet_block,resnet_block
 from csbdeep.utils import _raise, backend_channels_last, axes_check_and_normalize, axes_dict
 from csbdeep.utils.tf import keras_import, IS_TF_1, CARETensorBoard, CARETensorBoardImage
 from skimage.segmentation import clear_border
@@ -22,8 +22,6 @@ from ..sample_patches import sample_patches
 from ..utils import edt_prob, _normalize_grid
 from ..geometry import star_dist, dist_to_coord, polygons_to_label
 from ..nms import non_maximum_suppression
-
-
 
 
 
@@ -179,8 +177,6 @@ class Config2D(BaseConfig):
             self.unet_dropout          = 0.0
             self.unet_prefix           = ''
             self.net_conv_after_unet   = 128
-
-
         elif self.backbone =='resnet':#New version
             self.resnet_n_blocks         = 4
             self.resnet_kernel_size      = 3,3
@@ -219,7 +215,6 @@ class Config2D(BaseConfig):
         # the parameter 'min_delta' was called 'epsilon' for keras<=2.1.5
         min_delta_key = 'epsilon' if LooseVersion(keras.__version__)<=LooseVersion('2.1.5') else 'min_delta'
         self.train_reduce_lr           = {'factor': 0.5, 'patience': 40, min_delta_key: 0}
-        self.cycliclr                  = None
 
         self.use_gpu                   = False
 
