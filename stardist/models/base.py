@@ -393,9 +393,13 @@ class StarDistBase(BaseModel,CyclicLR):
             # TF2: add as first callback to put 'lr' in the logs for TensorBoard
             self.callbacks.insert(0,ReduceLROnPlateau(**rlrop_params))
         else:
+            print("Entering in CLC")
             clr = CyclicLR(base_lr=0.001, max_lr=0.006,
                                 step_size=2000., mode='triangular')
-            self.callbacks.insert(0,clr)
+
+            self.callbacks.append(clr)
+
+            #self.callbacks.insert(0,clr)
 
         self._model_prepared = True
 
