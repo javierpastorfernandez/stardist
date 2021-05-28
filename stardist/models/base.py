@@ -297,7 +297,7 @@ class StarDistBase(BaseModel,CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
 
-        super(BaseModel).__init__()
+        super(BaseModel).__init__(self, config, name=None, basedir='.')
         super(CyclicLR).__init__()
 
         threshs = dict(prob=None, nms=None)
