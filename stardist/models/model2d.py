@@ -6,7 +6,7 @@ import math
 from tqdm import tqdm
 
 from csbdeep.models import BaseConfig
-from csbdeep.internals.blocks import unet_block,resnet_block
+from csbdeep.internals.blocks import unet_block
 from csbdeep.utils import _raise, backend_channels_last, axes_check_and_normalize, axes_dict
 from csbdeep.utils.tf import keras_import, IS_TF_1, CARETensorBoard, CARETensorBoardImage
 from skimage.segmentation import clear_border
