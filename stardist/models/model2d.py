@@ -433,7 +433,8 @@ class StarDist2D(StarDistBase):
                       callbacks=self.callbacks, verbose=1)
         self._training_finished()
 
-        return history
+
+        return history,self.callbacks
 
 
     def _instances_from_prediction(self, img_shape, prob, dist, prob_thresh=None, nms_thresh=None, overlap_label=None, **nms_kwargs):
