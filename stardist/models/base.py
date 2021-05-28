@@ -158,7 +158,6 @@ class StarDistDataBase(RollingSequence):
 
 
 
-
 class CyclicLR(BaseModel):
 
     def __init__(
@@ -167,51 +166,51 @@ class CyclicLR(BaseModel):
         super().__init__(scale_fn=None)
         
         if scale_fn is None:
-            if self.config.cyliclr.mode == 'triangular':
-                self.config.cyliclr.scale_fn = lambda x: 1.
-                self.config.cyliclr.scale_mode = 'cycle'
+            if self.config.mode == 'triangular':
+                self.config.scale_fn = lambda x: 1.
+                self.config.scale_mode = 'cycle'
 
-            elif self.config.cyliclr.mode == 'triangular2':
-                self.config.cyliclr.scale_fn = lambda x: 1 / (2.**(x - 1))
-                self.config.cyliclr.scale_mode = 'cycle'
-            elif self.config.cyliclr.mode == 'exp_range':
-                self.config.cyliclr.scale_fn = lambda x: gamma ** x
-                self.config.cyliclr.scale_mode = 'iterations'
+            elif self.config.mode == 'triangular2':
+                self.config.scale_fn = lambda x: 1 / (2.**(x - 1))
+                self.config.scale_mode = 'cycle'
+            elif self.config.mode == 'exp_range':
+                self.config.scale_fn = lambda x: gamma ** x
+                self.config.scale_mode = 'iterations'
         else:
-            self.config.cyliclr.scale_fn = scale_fn
-            self.config.cyliclr.scale_mode = scale_mode
-        self.config.cyliclr.clr_iterations = 0.
-        self.config.cyliclr.trn_iterations = 0.
-        self.config.cyliclr.history = {}
+            self.config.scale_fn = scale_fn
+            self.config.scale_mode = scale_mode
+        self.config.clr_iterations = 0.
+        self.config.trn_iterations = 0.
+        self.config.history = {}
         self._reset()
 
 
     def _reset(self, new_base_lr=None, new_max_lr=None,
                new_step_size=None):
         if new_base_lr is not None:
-            self.config.cyliclr.base_lr = new_base_lr
+            self.config.base_lr = new_base_lr
         if new_max_lr is not None:
-            self.config.cyliclr.max_lr = new_max_lr
+            self.config.max_lr = new_max_lr
         if new_step_size is not None:
-            self.config.cyliclr.step_size = new_step_size
-        self.config.cyliclr.clr_iterations = 0.
+            self.config.step_size = new_step_size
+        self.config.clr_iterations = 0.
         
     def clr(self):
-        cycle = np.floor(1 + self.config.cyliclr.clr_iterations / (2 * self.config.cyliclr.step_size))
-        x = np.abs(self.config.cyliclr.clr_iterations / self.config.cyliclr.step_size - 2 * cycle + 1)
-        if self.config.cyliclr.scale_mode == 'cycle':
-            return self.config.cyliclr.base_lr + (self.config.cyliclr.max_lr - self.config.cyliclr.base_lr) * \
-                np.maximum(0, (1 - x)) * self.config.cyliclr.scale_fn(cycle)
+        cycle = np.floor(1 + self.config.clr_iterations / (2 * self.config.step_size))
+        x = np.abs(self.config.clr_iterations / self.config.step_size - 2 * cycle + 1)
+        if self.config.scale_mode == 'cycle':
+            return self.config.base_lr + (self.config.max_lr - self.config.base_lr) * \
+                np.maximum(0, (1 - x)) * self.config.scale_fn(cycle)
         else:
-            return self.config.cyliclr.base_lr + (self.config.cyliclr.max_lr - self.config.cyliclr.base_lr) * \
-                np.maximum(0, (1 - x)) * self.config.cyliclr.scale_fn(self.config.cyliclr.clr_iterations)
+            return self.config.base_lr + (self.config.max_lr - self.config.base_lr) * \
+                np.maximum(0, (1 - x)) * self.config.scale_fn(self.config.clr_iterations)
 
 
     def on_train_begin(self, logs={}):
         logs = logs or {}
 
-        if self.config.cyliclr.clr_iterations == 0:
-            K.set_value(self.model.optimizer.lr, self.config.cyliclr.base_lr)
+        if self.config.clr_iterations == 0:
+            K.set_value(self.model.optimizer.lr, self.config.base_lr)
         else:
             K.set_value(self.model.optimizer.lr, self.clr())
 
@@ -234,6 +233,7 @@ class CyclicLR(BaseModel):
     def on_epoch_end(self, epoch, logs=None):
         logs = logs or {}
         logs['lr'] = K.get_value(self.model.optimizer.lr)
+
 
 
 
