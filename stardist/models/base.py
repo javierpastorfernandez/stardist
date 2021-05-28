@@ -238,7 +238,7 @@ class CyclicLR(BaseModel):
 
 
 
-class StarDistBase(BaseModel):
+class StarDistBase(CyclicLR):
 
     def __init__(self, config, name=None, basedir='.'):
         super().__init__(config=config, name=name, basedir=basedir)
@@ -281,14 +281,6 @@ class StarDistBase(BaseModel):
 
     def prepare_for_training(self, optimizer=None):
         # cyclic training
-
-
-
-
-
-
-
-
 
 
         """Prepare for neural network training.
