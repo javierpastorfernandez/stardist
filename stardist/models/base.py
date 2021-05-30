@@ -389,7 +389,7 @@ class StarDistBase(BaseModel,CyclicLR):
                     #self.callbacks.append(TensorBoard(log_dir=str(self.logdir/'logs'), write_graph=False, profile_batch=0))
                     self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True,
                     write_images=False, write_steps_per_second=False, update_freq='batch',
-                    profile_batch=2, embeddings_freq=1, embeddings_metadata=None)
+                    profile_batch=2, embeddings_freq=1, embeddings_metadata=None))
 
 
         if self.config.train_reduce_lr is not None:
