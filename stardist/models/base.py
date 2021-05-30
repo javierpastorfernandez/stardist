@@ -383,11 +383,11 @@ class StarDistBase(BaseModel,CyclicLR):
 
 
             if self.config.train_tensorboard:
-                if IS_TF_1:
-                    self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), update_freq='batch', prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
-                else:
-                    self.callbacks.append(TensorBoard(log_dir=str(self.logdir/'logs'), update_freq='batch',write_graph=False, profile_batch=0))
-                    #self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True, write_images=False, write_steps_per_second=False, update_freq='batch',profile_batch=2, embeddings_freq=1, embeddings_metadata=None))
+                #if IS_TF_1:
+                    #self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), update_freq='batch', prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
+                #else:
+                    #self.callbacks.append(TensorBoard(log_dir=str(self.logdir/'logs'), update_freq='batch',write_graph=False, profile_batch=0))
+                self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True, write_images=True, write_steps_per_second=False, update_freq='batch',profile_batch=2, embeddings_freq=1, embeddings_metadata=True))
 
 
         if self.config.train_reduce_lr is not None:
