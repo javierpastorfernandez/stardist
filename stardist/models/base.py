@@ -394,8 +394,8 @@ class StarDistBase(BaseModel,CyclicLR):
             self.callbacks.insert(0,ReduceLROnPlateau(**rlrop_params))
         else:
             print("Entering in CLC")
-            clr = CyclicLR(base_lr=0.001, max_lr=0.006,
-                                step_size=2000., mode='triangular')
+            clr = CyclicLR(base_lr=0.00003, max_lr=0.3,
+                                step_size=5000., mode='triangular')
             """
             clr = CyclicLR(base_lr=0.001, max_lr=0.006,
                                 step_size=2000., mode='triangular')
