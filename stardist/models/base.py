@@ -387,7 +387,7 @@ class StarDistBase(BaseModel,CyclicLR):
                     #self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), update_freq='batch', prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
                 #else:
                     #self.callbacks.append(TensorBoard(log_dir=str(self.logdir/'logs'), update_freq='batch',write_graph=False, profile_batch=0))
-                self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=False, n_images=5, write_images=True, prob_out=False))
+                self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
                 self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True, write_images=True, update_freq='batch'))
 
 
