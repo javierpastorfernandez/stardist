@@ -387,8 +387,8 @@ class StarDistBase(BaseModel,CyclicLR):
                     #self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), update_freq='batch', prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
                 #else:
                     #self.callbacks.append(TensorBoard(log_dir=str(self.logdir/'logs'), update_freq='batch',write_graph=False, profile_batch=0))
-                #self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
-                self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True, write_images=True, update_freq='batch'))
+                self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=False))
+                #self.callbacks.append(TensorBoard(log_dir=str(self.logdir), histogram_freq=1, write_graph=True, write_images=True, update_freq='batch'))
 
 
         if self.config.train_reduce_lr is not None:
@@ -399,7 +399,7 @@ class StarDistBase(BaseModel,CyclicLR):
             self.callbacks.insert(0,ReduceLROnPlateau(**rlrop_params))
         else:
             print("Entering in CLC")
-            clr = CyclicLR(base_lr=0.00003, max_lr=0.3,
+            clr = CyclicLR(base_lr=0, max_lr=0.003,
                                 step_size=800., mode='triangular')
             """
             clr = CyclicLR(base_lr=0.001, max_lr=0.006,
