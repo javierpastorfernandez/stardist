@@ -400,7 +400,7 @@ class StarDistBase(BaseModel,CyclicLR):
         else:
             print("Entering in CLC")
             clr = CyclicLR(base_lr=0, max_lr=0.003,
-                                step_size=800., mode='triangular')
+                                step_size=5000., mode='triangular')
             """
             clr = CyclicLR(base_lr=0.001, max_lr=0.006,
                                 step_size=2000., mode='triangular')
